@@ -1,0 +1,44 @@
+{
+  "name": "@indice/incontrl-sdk",
+  "version": "1.0.0",
+  "description": "Incontrl.io Javascript SDK for nodejs and the browser",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=4"
+  },
+  "types": "types/index.d.ts",
+  "scripts": {
+    "lint": "tslint '{lib,test}/**/*.ts'",
+    "clean": "del-cli dist",
+    "build": "tsc",
+    "release": "npm run build && npm publish --access public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/indice-co/Incontrl.Js.git"
+  },
+  "keywords": [
+    "node",
+    "incontrl",
+    "sdk",
+    "typescript"
+  ],
+  "dependencies": {
+    "@types/body-parser": "1.16.5",
+    "@types/node": "^7.0.31",
+    "axios": "0.16.2",
+    "body-parser": "1.18.2"
+  },
+  "devDependencies": {
+    "del-cli": "^1.1.0",
+    "ts-node": "^3.0.6",
+    "tslint": "^5.4.3",
+    "typescript": "^2.3.4"
+  },
+  "author": "c.leftheris",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/indice-co/Incontrl.Js/issues"
+  },
+  "homepage": "https://github.com/indice-co/Incontrl.Js#readme"
+}
