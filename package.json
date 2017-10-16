@@ -1,6 +1,6 @@
 {
   "name": "@indice/incontrl-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Incontrl.io Javascript SDK for nodejs and the browser",
   "main": "dist/index.js",
   "engines": {

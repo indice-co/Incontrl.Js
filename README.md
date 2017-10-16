@@ -1,4 +1,4 @@
-# Incontrl SDK 
+# Incontrl SDK  ![alt text](icon/icon-64.png "Incontrl logo")
 Node.js SDK for [incontrl.io](https://incontrl.io) Business toolkit, API
 
 ## Getting Started
