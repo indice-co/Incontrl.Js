@@ -1,6 +1,8 @@
 declare namespace Incontrl {
     
     export type ClientConfig = {
-        channelAccessToken: string,
+        accessToken: string,
     };
+
+    export type Config = ClientConfig
 }
