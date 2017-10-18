@@ -1,11 +1,11 @@
 declare namespace Incontrl {
-    
     export type ClientConfig = {
         accessToken: string,
     };
 
     export type Config = ClientConfig
 
+    /* Models - Start */
     export interface ISubscription {
         id: string;
         code: string;
@@ -144,7 +144,7 @@ declare namespace Incontrl {
         tags: string;
         generatesDocuments: boolean;
     }
-    
+
     export interface IInvoiceTracking {
         reads: number;
         recipient: string;
@@ -278,7 +278,6 @@ declare namespace Incontrl {
         recipient: string;
     }
 
-
     export interface ICreateSubscriptionRequest {
         code: string;
         alias: string;
@@ -320,10 +319,188 @@ declare namespace Incontrl {
     export interface IUpdateCompanyRequest extends IUpdateOrganisationRequest {
         paymentMethods: IPaymentOption[];
     }
-    
+
     export type InvoiceFormat = "pdf" | undefined;
     export type InvoiceStatus = "Draft" | "Issued" | "Overdue" | "Partial" | "Paid" | "Void" | "Deleted";
     export type PaymentOptionType = "BankTransfer" | "Online" | "UponDelivery";
     export type RecordType = "AccountsReceivable" | "AccountsPayable";
     export type SubscriptionStatus = "Enabled" | "Disabled" | "Deleted";
+    /* Models - End */
+
+    /* Abstractions - Start */
+    export interface IContactApi {
+        SubscriptionId: string;
+        ContactId: string;
+        GetAsync(): Promise<IContact>;
+        UpdateAsync(request: IContact): Promise<IContact>;
+        Companies(): IContactCompaniesApi;
+    }
+
+    export interface IContactCompaniesApi {
+        SubscriptionId: string;
+        ContactId: string;
+        GetAsync(options: ListOptions<IOrganisationFilter> = null): Promise<IResultSet<IOrganisation>>;
+    }
+
+    export interface IContactsApi {
+        SubscriptionId: string;
+        ListAsync(options: ListOptions<IContactFilter> = null): Promise<IResultSet<IContact>>;
+        CreateAsync(request: IContact): Promise<IContact>;
+    }
+
+    export interface ICoreApi {
+        LoginAsync(userName: string, password: string): Promise<any>;
+        LoginAsync(): Promise<any>;
+        LoginAsync(refreshToken: string): Promise<any>;
+        Subscriptions(): ISubscriptionsApi;
+        Subscription(subscriptionId: string): ISubscriptionApi;
+        Subscription(subscriptionAlias: string): ISubscriptionApi;
+        License(): ILicenseApi;
+        Configure(apiAddress: string, authorityAddress: string): ICoreApi;
+    }
+
+    export interface IInvoiceApi {
+        SubscriptionId: string;
+        InvoiceId: string;
+        GetAsync(): Promise<IInvoice>;
+        UpdateAsync(request: IUpdateInvoiceRequest): Promise<IInvoice>;
+        DeleteAsync(): Promise<any>;
+        As(format: InvoiceFormat): IInvoiceDocumentApi;
+        Status(): IInvoiceStatusApi;
+        Trackings(): IInvoiceTrackingApi;
+        Type(): IInvoiceInvoiceTypeApi;
+    }
+
+    export interface IInvoiceDocumentApi {
+        SubscriptionId: string;
+        InvoiceId: string;
+        Format: InvoiceFormat;
+        DownloadAsync(): Promise<IFileResult>;
+    }
+
+    export interface IInvoiceInvoiceTypeApi {
+        SubscriptionId: string;
+        InvoiceId: string;
+        GetAsync(): Promise<InvoiceType>;
+        UpdateAsync(request: IUpdateInvoiceTypeRequest): Promise<InvoiceType>;
+    }
+
+    export interface IInvoicesApi {
+        SubscriptionId: string;
+        ListAsync(options: ListOptions<IInvoiceListFilter> = null): Promise<IResultSet<IInvoice>>;
+        CreateAsync(request: ICreateInvoiceRequest): Promise<IInvoice>;
+    }
+
+    export interface IInvoiceStatusApi {
+        SubscriptionId: string;
+        InvoiceId: string;
+        GetAsync(): Promise<InvoiceStatus>;
+        UpdateAsync(request: InvoiceStatus): Promise<InvoiceStatus>;
+    }
+
+    export interface IInvoiceTrackingApi {
+        SubscriptionId: string;
+        InvoiceId: string;
+        ListAsync(options: ListOptions = null): Promise<IResultSet<IInvoiceTracking>>;
+        CreateAsync(request: ICreateInvoiceTrackingRequest): Promise<ITracker>;
+    }
+
+    export interface IInvoiceTypeApi {
+        SubscriptionId: string;
+        InvoiceTypeId: string;
+        GetAsync(): Promise<InvoiceType>;
+        DeleteAsync(): Promise<any>;
+        UpdateAsync(request: IUpdateInvoiceTypeRequest): Promise<InvoiceType>;
+        Template(): IInvoiceTypeTemplateApi;
+    }
+
+    export interface IInvoiceTypesApi {
+        SubscriptionId: string;
+        CreateAsync(request: ICreateInvoiceTypeRequest): Promise<InvoiceType>;
+        ListAsync(options: ListOptions = null): Promise<IResultSet<InvoiceType>>;
+    }
+
+    export interface IInvoiceTypeTemplateApi {
+        SubscriptionId: string;
+        InvoiceTypeId: string;
+        DownloadAsync(): Promise<IFileResult>;
+        UploadAsync(fileContent: ByteString, fileName: string): Promise<any>;
+    }
+
+    export interface ILicenseApi {
+        GetAsync(): Promise<string>;
+    }
+
+    export interface IOrganisationApi {
+        SubscriptionId: string;
+        OrganisationId: string;
+        GetAsync(): Promise<IOrganisation>;
+        UpdateAsync(request: IUpdateOrganisationRequest): Promise<IOrganisation>;
+    }
+
+    export interface IOrganisationsApi {
+        SubscriptionId: string;
+        ListAsync(options: ListOptions<IOrganisationFilter> = null): Promise<IResultSet<IOrganisation>>;
+        CreateAsync(request: IOrganisation): Promise<IOrganisation>;
+    }
+
+    export interface IProductApi {
+        SubscriptionId: string;
+        ProductId: string;
+        GetAsync(): Promise<IProduct>;
+        UpdateAsync(request: IProduct): Promise<IProduct>;
+    }
+
+    export interface IProductsApi {
+        SubscriptionId: string;
+        ListAsync(options: ListOptions = null): Promise<IResultSet<IProduct>>;
+        CreateAsync(request: IProduct): Promise<IProduct>;
+    }
+
+    export interface ISubscriptionApi {
+        SubscriptionId: string;
+        GetAsync(): Promise<ISubscription>;
+        Company(): ISubscriptionCompanyApi;
+        Status(): ISubscriptionStatusApi;
+        Contacts(): IContactsApi;
+        Contact(): ISubscriptionContactApi;
+        Contact(contactId: string): IContactApi;
+        Invoices(): IInvoicesApi;
+        Invoice(invoiceId: string): IInvoiceApi;
+        InvoiceTypes(): IInvoiceTypesApi;
+        InvoiceType(invoiceTypeId: string): IInvoiceTypeApi;
+        Organisations(): IOrganisationsApi;
+        Organisation(organisationId: string): IOrganisationApi;
+        Products(): IProductsApi;
+        Product(productId: string): IProductApi;
+    }
+
+    export interface ISubscriptionCompanyApi {
+        SubscriptionId: string;
+        GetAsync(): Promise<IOrganisation>;
+        UpdateAsync(request: IUpdateCompanyRequest): Promise<IOrganisation>;
+    }
+
+    export interface ISubscriptionContactApi {
+        SubscriptionId: string;
+        GetAsync(): Promise<IContact>;
+        UpdateAsync(request: IContact): Promise<IContact>;
+    }
+
+    export interface ISubscriptionsApi {
+        ListAsync(options: ListOptions<ISubscriptionListFilter> = null): Promise<IResultSet<ISubscription>>;
+        CreateAsync(request: ICreateSubscriptionRequest): Promise<ISubscription>;
+    }
+
+    export interface ISubscriptionStatusApi {
+        SubscriptionId: string;
+        GetAsync(): Promise<SubscriptionStatus>;
+        UpdateAsync(request: SubscriptionStatus): Promise<SubscriptionStatus>;
+    }
+
+    export interface IResultSet<T> {
+        Count: number;
+        Items: T[];
+    }
+    /* Abstractions - End */
 }
