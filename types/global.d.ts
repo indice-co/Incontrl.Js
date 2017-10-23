@@ -11,7 +11,6 @@ export interface IResultSet<T> {
     items: T[];
     count: number;   
 }
-
 export interface ISummaryResultSet<T, TSummary> {
     items?: T[];
     count?: number;   
